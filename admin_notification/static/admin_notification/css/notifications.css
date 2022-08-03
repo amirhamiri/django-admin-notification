@@ -1,0 +1,29 @@
+.notification-box{
+  position: relative;
+  display: inline;
+  margin: 0px 11px;
+}
+.notification-box .badge{
+  position: absolute;
+  bottom: -10px;
+  right: -8px;
+  font-size: 13px;
+  background-color: red;
+  padding: 3px;
+  min-width: 15px;
+  height: 15px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+.notification-box .badge:hover{
+  background-color: #d90000;
+
+}
+.notification-img{
+  width: 30px !important;
+  height: 30px !important;
+
+}

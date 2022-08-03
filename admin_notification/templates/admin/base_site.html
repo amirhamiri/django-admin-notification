@@ -1,0 +1,28 @@
+{% extends "admin/base.html" %}
+{% load static admin_notification_tags %}
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} |
+    {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrastyle %}
+
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'admin_notification/css/notifications.css' %}">
+
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+{% block branding %}
+    {% get_admin_notification_item as item %}
+    <h1 id="site-name">
+        <a href="{% url 'check_notifications' %}">
+            <div class="notification-box">
+                <img class="notification-img" src="{% static 'admin_notification/img/notification.png' %}" alt="">
+                <span class="badge">{{ item.count }}</span>
+            </div>
+        </a>
+       <span id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></span>
+    </h1>
+
+
+{% endblock %}
