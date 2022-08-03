@@ -26,7 +26,7 @@ ADMIN_SITE_BASE_URL = 'admin_site_base_url/' # default is "admin/
 ...
 from admin_notification.views import check_notification_view
 urlpatterns = [
-    path('check/notification', check_notification_view, name="check_notification"),
+    path('check/notification', check_notification_view, name="check_notifications"),
     ...
 ]
 
