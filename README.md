@@ -35,3 +35,4 @@ urlpatterns = [
 - Restart your application server
 - Visit http://127.0.0.1:8000/admin/
 - Create an instance of the model(NOTIFICATION_MODEL) and enjoy :)
+![notif](https://user-images.githubusercontent.com/78421033/182895917-8c9cbc58-03df-48f8-b231-8f8a50c8162f.jpg)
