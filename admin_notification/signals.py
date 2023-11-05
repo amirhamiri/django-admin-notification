@@ -8,17 +8,17 @@ from django.apps import apps as django_apps
 from admin_notification.models import Notification
 from django.dispatch import receiver
 
-try:
-    model = django_apps.get_model(settings.NOTIFICATION_MODEL, require_ready=False)
-except ValueError:
-    raise ImproperlyConfigured(
-        "NOTIFICATION_MODEL must be of the form 'app_label.model_name'"
-    )
-
-
-@receiver(post_save, sender=model)
 def post_save_handler(sender, **kwargs):
     if kwargs['created']:
         notification = Notification.objects.all().first()
         notification.count += 1
         notification.save()
+
+try:
+    for model in settings.NOTIFICATION_MODEL:
+        model = django_apps.get_model(model, require_ready=False)
+        post_save.connect(post_save_handler, model)
+except ValueError:
+    raise ImproperlyConfigured(
+        "NOTIFICATION_MODEL must be of the form 'app_label.model_name'"
+    )
