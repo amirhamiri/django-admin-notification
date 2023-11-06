@@ -1,9 +1,10 @@
-.notification-box{
+.notification-box {
   position: relative;
   display: inline;
   margin: 0px 11px;
 }
-.notification-box .badge{
+
+.notification-box .badge {
   position: absolute;
   bottom: -10px;
   right: -8px;
@@ -18,12 +19,95 @@
   justify-content: center;
   color: white;
 }
-.notification-box .badge:hover{
+
+.badge-orange {
+  background-color: rgb(255, 187, 0);
+  padding: 3px;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 15px;
+  border-radius: 7px;
+  align-items: center;
+  font-weight: bold;
+  justify-content: center;
+  color: rgb(0, 0, 0);
+
+}
+
+.notification-box .badge:hover {
   background-color: #d90000;
 
 }
-.notification-img{
+
+.notification-img {
   width: 30px !important;
   height: 30px !important;
+}
 
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+
+.dropdown .dropbtn {
+  font-size: 16px;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  /* For vertical align on mobile phones */
+  margin: 0;
+  /* For vertical align on mobile phones */
+}
+
+
+.dropdown-content {
+  background-color: gold;
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+}
+
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a {
+  background-color: #417690;
+  border-bottom: solid white 0.5px;
+}
+
+.dropdown-content a::after {
+  content: ">>";
+  position: absolute;
+  right: 10px;
+  /* Adjust the position as needed */
+  opacity: 0;
+  animation: slideRight 1s linear infinite alternate;
+}
+
+@keyframes slideRight {
+  0% {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }

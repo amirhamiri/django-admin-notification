@@ -7,10 +7,12 @@ from django.shortcuts import HttpResponse, redirect
 from django.apps import apps as django_apps
 from admin_notification.models import Notification
 from django.dispatch import receiver
+from django.contrib.contenttypes.models import ContentType
 
 def post_save_handler(sender, **kwargs):
     if kwargs['created']:
-        notification = Notification.objects.all().first()
+        model_ct = ContentType.objects.get_for_model(sender)
+        notification, _ = Notification.objects.get_or_create(model= model_ct)
         notification.count += 1
         notification.save()
 

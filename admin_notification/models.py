@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 from django.contrib.auth.models import User
 from admin_notification.cache import del_cached_active_item
 from django.db import models
+from django.contrib.contenttypes.models import ContentType
 from django.db.models.signals import post_delete, post_save, pre_save
 from six import python_2_unicode_compatible
 
@@ -46,8 +47,6 @@ class Notification(models.Model):
             obj = objs_manager.all().first()
             if obj:
                 obj.set_active()
-            else:
-                obj = objs_manager.create()
 
         elif objs_active_count == 1:
             obj = objs_active_ls[0]
@@ -59,7 +58,7 @@ class Notification(models.Model):
         return obj
     count = models.IntegerField(default=0)
     active = models.BooleanField(default=True)
-
+    model = models.ForeignKey(ContentType, on_delete=models.CASCADE)
 
 
 

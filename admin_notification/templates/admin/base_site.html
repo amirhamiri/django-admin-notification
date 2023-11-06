@@ -13,16 +13,23 @@
 
 {% block nav-global %}{% endblock %}
 {% block branding %}
-    {% get_admin_notification_item as item %}
-    <h1 id="site-name">
-        <a href="{% url 'check_notifications' %}">
+    {% get_admin_notification_item as items %}
+    <div class ="dropdown">
+        <button href="{% url 'check_notifications' %}" class="dropbtn">
             <div class="notification-box">
                 <img class="notification-img" src="{% static 'admin_notification/img/notification.png' %}" alt="">
-                <span class="badge">{{ item.count }}</span>
+                <span class="badge">{{ items.count }}</span>
             </div>
-        </a>
-       <span id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></span>
+        </button>
+        {%if user.is_authenticated%}
+        <div class="dropdown-content">
+            {%for item in items.result%}
+            <a href="">Model <span class="badge-orange">{{item.model}}</span> has <span class="badge-orange">{{item.count}}</span> new instances</a> 
+            {%endfor%}
+        </div>
+        {%endif%}
+    </div>
+    <h1 id="site-name">
+        <span id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></span>
     </h1>
-
-
 {% endblock %}

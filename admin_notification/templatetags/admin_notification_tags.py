@@ -2,6 +2,7 @@ import django
 from django import template
 from admin_notification.cache import get_cached_active_item, set_cached_active_item
 from admin_notification.models import Notification
+from admin_notification.serializers import NotificationsSerializer
 
 register = template.Library()
 
@@ -13,11 +14,7 @@ else:
 
 @simple_tag(takes_context=True)
 def get_admin_notification_item(context):
-    item = get_cached_active_item()
-    if not item:
-        item = Notification.get_active_item()
-        set_cached_active_item(item)
-    return item
+    return NotificationsSerializer().data
 
 
 
