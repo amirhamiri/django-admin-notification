@@ -24,7 +24,7 @@
         {%if user.is_authenticated%}
         <div class="dropdown-content">
             {%for item in items.result%}
-            <a href="{{item.url}}">Model <span class="badge-orange">{{item.model}}</span> has <span class="badge-orange">{{item.count}}</span> new instances</a> 
+            <a href="{% url 'check_notification' %}?id={{item.id}}">Model <span class="badge-orange">{{item.model}}</span> has <span class="badge-orange">{{item.count}}</span> new instances</a> 
             {%endfor%}
         </div>
         {%endif%}
