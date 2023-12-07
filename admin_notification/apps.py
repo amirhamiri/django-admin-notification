@@ -8,4 +8,3 @@ class AdminNotificationConfig(AppConfig):
     def ready(self):
         from admin_notification.models import Notification
         import admin_notification.signals
-        post_migrate.connect(Notification.post_migrate_handler, sender=self)
