@@ -1,6 +1,5 @@
 import django
 from django import template
-from admin_notification.cache import get_cached_active_item, set_cached_active_item
 from admin_notification.models import Notification
 from admin_notification.serializers import NotificationsSerializer
 
@@ -12,9 +11,12 @@ else:
     simple_tag = register.simple_tag
 
 
-@simple_tag(takes_context=True)
-def get_admin_notification_item(context):
-    return NotificationsSerializer().data
+@simple_tag
+def get_admin_notification_item():
+    data = NotificationsSerializer().data
+    return data
 
 
-
+@register.filter
+def is_numeric(x):
+    return isinstance(x, int)

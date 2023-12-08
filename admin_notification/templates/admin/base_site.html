@@ -23,8 +23,10 @@
         </button>
         {%if user.is_authenticated%}
         <div class="dropdown-content">
-            {%for item in items.result%}
+            {%for item in items.values%}
+            {%if not item|is_numeric %}
             <a href="{% url 'check_notification' %}?id={{item.id}}">Model <span class="badge-orange">{{item.model}}</span> has <span class="badge-orange">{{item.count}}</span> new instances</a> 
+            {% endif %}
             {%endfor%}
         </div>
         {%endif%}
