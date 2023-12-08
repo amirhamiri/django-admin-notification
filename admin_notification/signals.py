@@ -9,12 +9,16 @@ from admin_notification.models import Notification
 from django.dispatch import receiver
 from django.contrib.contenttypes.models import ContentType
 
-def post_save_handler(sender, **kwargs):
-    if kwargs['created']:
+
+def post_save_handler(sender, instance, **kwargs):
+    if kwargs["created"]:
+        print("called1")
         model_ct = ContentType.objects.get_for_model(sender)
-        notification, _ = Notification.objects.get_or_create(model= model_ct)
+        notification, _ = Notification.objects.get_or_create(model=model_ct)
         notification.count += 1
         notification.save()
+        notification.update_to_cache()
+
 
 try:
     for model in settings.NOTIFICATION_MODEL:
