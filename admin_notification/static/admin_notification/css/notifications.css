@@ -91,12 +91,12 @@
   border-bottom: solid white 0.5px;
 }
 
-.dropdown-content a::after {
+.dropdown-content a:hover:after {
   content: ">>";
-  position: absolute;
-  right: 10px;
-  /* Adjust the position as needed */
+  padding-left: 5px;
+  position: relative;
   opacity: 0;
+  right: 0;
   animation: slideRight 1s linear infinite alternate;
 }
 
