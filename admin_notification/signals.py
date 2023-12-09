@@ -21,10 +21,10 @@ def post_save_handler(sender, instance, **kwargs):
 
 
 try:
-    for model in settings.NOTIFICATION_MODEL:
+    for model in settings.NOTIFICATION_MODELS:
         model = django_apps.get_model(model, require_ready=False)
         post_save.connect(post_save_handler, model)
 except ValueError:
     raise ImproperlyConfigured(
-        "NOTIFICATION_MODEL must be of the form 'app_label.model_name'"
+        "NOTIFICATION_MODELS must be of the form 'app_label.model_name'"
     )
