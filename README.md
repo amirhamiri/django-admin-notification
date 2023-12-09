@@ -11,17 +11,21 @@ INSTALLED_APPS = (
     "django.contrib.admin",
     #...
 )
+```
+## Settings
 
-```
-- In settings.py:
+
+`NOTIFICATION_MODELS`: A list of models which you want to get notified about them in the django admin panel. the correct format for each element of the list is `app.model`
 ```python
-NOTIFICATION_MODEL = 'myapp.MyModel' # Select the model you want to control, for example: "accounts.Message"
+NOTIFICATION_MODELS = ['myapp.MyModel']
 ```
-- If you have changed the base url of the admin site. in settings.py: 
+
+`ADMIN_SITE_BASE_URL`: An string representing the url to django admin page, if you have changed the base url of the admin site in settings.py, the default is `"admin/"`:
 ```python
-ADMIN_SITE_BASE_URL = 'admin_site_base_url/' # default is "admin/
+ADMIN_SITE_BASE_URL = 'admin_site_base_url/'
 ```
-- In urls.py:
+## Urls
+`check_notifications`: This view is needed to keep track of notifications and redirecting to the corresponding models admin page. you must add this view into your urls list.
 ```python
 ...
 from admin_notification.views import check_notification_view
@@ -29,10 +33,12 @@ urlpatterns = [
     path('check/notification', check_notification_view, name="check_notifications"),
     ...
 ]
-
 ```
+> Note: You are free to change the url but keep the name the same as it is in the example.
+
+## Run
 - Run `python manage.py migrate`
 - Restart your application server
 - Visit http://127.0.0.1:8000/admin/
-- Create an instance of the model(NOTIFICATION_MODEL) and enjoy :)
+- Create an instance of any of the NOTIFICATION_MODELS and enjoy :)
 ![notif](https://user-images.githubusercontent.com/78421033/182895917-8c9cbc58-03df-48f8-b231-8f8a50c8162f.jpg)
