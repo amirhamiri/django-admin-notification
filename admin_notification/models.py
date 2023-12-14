@@ -1,75 +1,66 @@
 from __future__ import unicode_literals
 from django.contrib.auth.models import User
-from admin_notification.cache import del_cached_active_item
 from django.db import models
+from django.urls import reverse
+from django.contrib.contenttypes.models import ContentType
 from django.db.models.signals import post_delete, post_save, pre_save
 from six import python_2_unicode_compatible
+from functools import cached_property
+from admin_notification.constants import APP_CACHE, NOTIFICATIONS_CACHE_KEY
 
 
 @python_2_unicode_compatible
 class Notification(models.Model):
-    @staticmethod
-    def post_migrate_handler(**kwargs):
-        del_cached_active_item()
-        Notification.get_active_item()
-
-    @staticmethod
-    def post_delete_handler(**kwargs):
-        del_cached_active_item()
-        Notification.get_active_item()
-
-    @staticmethod
-    def post_save_handler(instance, **kwargs):
-        del_cached_active_item()
-        if instance.active:
-            Notification.objects.exclude(pk=instance.pk).update(active=False)
-        Notification.get_active_item()
-
-    @staticmethod
-    def pre_save_handler(instance, **kwargs):
-        if instance.pk is None:
-            try:
-                obj = Notification.objects.get(count=instance.count)
-                if obj:
-                    instance.pk = obj.pk
-            except Notification.DoesNotExist:
-                pass
-
-    @staticmethod
-    def get_active_item():
-        objs_manager = Notification.objects
-        objs_active_qs = objs_manager.filter(active=True)
-        objs_active_ls = list(objs_active_qs)
-        objs_active_count = len(objs_active_ls)
-
-        if objs_active_count == 0:
-            obj = objs_manager.all().first()
-            if obj:
-                obj.set_active()
-            else:
-                obj = objs_manager.create()
-
-        elif objs_active_count == 1:
-            obj = objs_active_ls[0]
-
-        elif objs_active_count > 1:
-            obj = objs_active_ls[-1]
-            obj.set_active()
-
-        return obj
     count = models.IntegerField(default=0)
     active = models.BooleanField(default=True)
+    model = models.ForeignKey(ContentType, on_delete=models.CASCADE)
 
+    def get_admin_link(self):
+        app_label = self.model.app_label
+        model_name = self.model.model
+        url = reverse(f"admin:{app_label}_{model_name}_changelist")
+        return url
 
+    def reset_notifications(self):
+        self.count = 0
+        self.save()
 
+    def update_to_cache(self) -> dict:
+        self.refresh_from_db
+        data = APP_CACHE.get(NOTIFICATIONS_CACHE_KEY, None)
+        if data is None:
+            raise RuntimeError("App cache updated before initialization")
+        instance_data = {
+            self.model: {
+                "id": self.id,
+                "count": self.count,
+                "model": self.model,
+                "url": self.get_admin_link,
+            }
+        }
+        data.update(instance_data)
+
+        data["count"] = sum(
+            value["count"] for key, value in data.items() if key != "count"
+        )
+        print(data, self.count)
+        print(f'{data["count"]} += {self.count} - {data[self.model]["count"]}')
+        Notification.set_cache_data(data)
+        return data
+
+    @staticmethod
+    def get_cache_data() -> dict:
+        data = APP_CACHE.get(NOTIFICATIONS_CACHE_KEY, None)
+        if data is not None:
+            return data
+        return dict()
+
+    @staticmethod
+    def set_cache_data(data: dict) -> dict:
+        if not isinstance(data, dict):
+            raise ValueError("Data must be a dictionary")
+        APP_CACHE.set(NOTIFICATIONS_CACHE_KEY, data, timeout=1000)
+        return data
 
     def __str__(self):
         return "notifications"
-
-
-
-
-post_delete.connect(Notification.post_delete_handler, sender=Notification)
-post_save.connect(Notification.post_save_handler, sender=Notification)
-pre_save.connect(Notification.pre_save_handler, sender=Notification)
-
